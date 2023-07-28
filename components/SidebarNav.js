@@ -50,6 +50,7 @@ function SidebarNav() {
       <div>
         {menu.list.map((item, index) => (
           <h2
+            key={item.id}
             onClick={() => setActiveIndex(index)}
             className={`flex gap-2 items-center p-2 text-black mt-3 hover:bg-blue-400 hover:text-white rounded-md cursor-pointer ${
               activeIndex === index ? "bg-blue-400 text-white" : null
