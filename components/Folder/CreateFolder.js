@@ -1,10 +1,26 @@
 import Image from "next/image";
-import React, { useState } from "react";
-
+import React, { useContext, useState } from "react";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { app } from "@/Config/FirebaseConfig";
+import { useSession } from "next-auth/react";
+import { ShowToastContext } from "@/Context/ShowToastContext";
 function CreateFolder() {
   const [folderName, setFolderName] = useState();
-  const onCreate = () => {
+  const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
+  const db = getFirestore(app);
+  const { data: session } = useSession();
+  const docId = Math.random().toString();
+  const timestamp = Date.now().toString();
+
+  //!TODO: Add timestamp and also make sure id is in the correct format
+  const onCreate = async () => {
     console.log(folderName);
+    await setDoc(doc(db, "Folders", docId), {
+      name: folderName,
+      id: docId,
+      createdBy: session.user.email,
+    });
+    setShowToastMsg("Folder created successfully");
   };
   return (
     <div>
