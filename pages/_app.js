@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import SidebarNav from "@/components/SidebarNav";
+import CreateFolder from "@/components/Folder/CreateFolder";
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
