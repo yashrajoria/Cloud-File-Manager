@@ -4,6 +4,7 @@ import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/Config/FirebaseConfig";
 import { useSession } from "next-auth/react";
 import { ShowToastContext } from "@/Context/ShowToastContext";
+import { ParentFolderIdContext } from "@/Context/ParentFolderIdContext";
 function CreateFolder() {
   const [folderName, setFolderName] = useState();
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
@@ -11,7 +12,9 @@ function CreateFolder() {
   const { data: session } = useSession();
   const docId = Math.random().toString();
   const timestamp = Date.now().toString();
-
+  const { parentFolderId, setParentFolderId } = useContext(
+    ParentFolderIdContext
+  );
   //!TODO: Add timestamp and also make sure id is in the correct format
   const onCreate = async () => {
     console.log(folderName);
@@ -19,6 +22,7 @@ function CreateFolder() {
       name: folderName,
       id: docId,
       createdBy: session.user.email,
+      parentFolderId: parentFolderId,
     });
     setShowToastMsg("Folder created successfully");
   };

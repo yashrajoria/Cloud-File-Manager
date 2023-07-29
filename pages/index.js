@@ -4,19 +4,23 @@ import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import FolderList from "@/components/Folder/FolderList";
 import FileList from "@/components/File/FileList";
 import { collection, getFirestore } from "firebase/firestore";
 import { app } from "@/Config/FirebaseConfig";
 import { query, where, getDocs } from "firebase/firestore";
+import { ParentFolderIdContext } from "@/Context/ParentFolderIdContext";
 
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
   const [folderList, setFolderList] = useState([]);
   const db = getFirestore(app);
+  const { parentFolderId, setParentFolderId } = useContext(
+    ParentFolderIdContext
+  );
   useEffect(() => {
     if (!session) {
       router.push("/login");
@@ -24,6 +28,7 @@ export default function Home() {
       getUserFolderList();
       console.log("Session", session.user);
     }
+    setParentFolderId(0);
   }, [session]);
 
   const getUserFolderList = async () => {

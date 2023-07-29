@@ -1,10 +1,57 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useContext } from "react";
+import { ParentFolderIdContext } from "@/Context/ParentFolderIdContext";
+import { getFirestore } from "firebase/firestore";
+import { app } from "@/Config/FirebaseConfig";
+import { useSession } from "next-auth/react";
+import { query, where, getDocs } from "firebase/firestore";
+import { collection } from "firebase/firestore";
+import SearchBar from "@/components/SearchBar";
+import FolderList from "@/components/Folder/FolderList";
+import { ShowToastContext } from "@/Context/ShowToastContext";
 
 function FolderDetails() {
   const router = useRouter();
   const { name, id } = router.query;
-  return <div>FolderDetails:{name}</div>;
+  const { data: session } = useSession();
+  const { parentFolderId, setParentFolderId } = useContext(
+    ParentFolderIdContext
+  );
+  const [folderList, setFolderList] = useState([]);
+  const db = getFirestore(app);
+
+  const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
+  useEffect(() => {
+    setParentFolderId(id);
+    if (session) {
+      getUserFolderList();
+    }
+  }, [id, session, showToastMsg]);
+
+  const getUserFolderList = async () => {
+    setFolderList([]); //assigning them empty so that values dont get appended wheneber the page is refreshed
+    const getQuery = query(
+      collection(db, "Folders"),
+      where("createdBy", "==", session.user.email),
+      where("parentFolderId", "==", id)
+    );
+    console.log("inner folder success");
+    const querySnapshot = await getDocs(getQuery);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      setFolderList((folderList) => [...folderList, doc.data()]);
+    });
+  };
+  return (
+    <div className="p-5">
+      <SearchBar />
+      <h2 className="text-[20px] font-bold mt-5">{name}</h2>
+
+      <FolderList folderList={folderList} />
+    </div>
+  );
 }
 
 export default FolderDetails;
