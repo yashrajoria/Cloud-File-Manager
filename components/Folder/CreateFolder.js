@@ -10,7 +10,7 @@ function CreateFolder() {
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
   const db = getFirestore(app);
   const { data: session } = useSession();
-  const docId = Math.random().toString();
+  const docId = Date.now().toString();
   const timestamp = Date.now().toString();
   const { parentFolderId, setParentFolderId } = useContext(
     ParentFolderIdContext

@@ -1,39 +1,54 @@
-import React from "react";
+import React, { useContext } from "react";
 import FileItem from "./FileItem";
+import { deleteDoc, getFirestore, doc } from "firebase/firestore";
+import { app } from "@/Config/FirebaseConfig";
+import { ShowToastContext } from "@/Context/ShowToastContext";
 
-function FileList() {
+function FileList({ fileList }) {
   //dummy data
-  const FileList = [
-    {
-      id: 1,
-      name: "UX Principal.docx",
-      type: "doc",
-      size: "6272 kB",
-      modifiedAt: "Nov 23,2020",
-    },
-    {
-      id: 2,
-      name: "Data Structure.pdf",
-      type: "pdf",
-      size: "672 kB",
-      modifiedAt: "Nov 23,2022",
-    },
-    {
-      id: 3,
-      name: "smaple Image.png",
-      type: "image",
-      size: "400 kB",
-      modifiedAt: "Nov 23,2023",
-    },
-    {
-      id: 4,
-      name: "React Principal.docx",
-      type: "doc",
-      size: "6272 kB",
-      modifiedAt: "Nov 23,2020",
-    },
-  ];
+  // const fileList = [
+  //   {
+  //     id: 1,
+  //     name: "UX Principal.docx",
+  //     type: "doc",
+  //     size: "6272 kB",
+  //     modifiedAt: "Nov 23,2020",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Data Structure.pdf",
+  //     type: "pdf",
+  //     size: "672 kB",
+  //     modifiedAt: "Nov 23,2022",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "smaple Image.png",
+  //     type: "image",
+  //     size: "400 kB",
+  //     modifiedAt: "Nov 23,2023",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "React Principal.docx",
+  //     type: "doc",
+  //     size: "6272 kB",
+  //     modifiedAt: "Nov 23,2020",
+  //   },
+  // ];
+  const db = getFirestore(app);
+  const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
+  const deleteFile = async (file) => {
+    console.log(file);
+    if (!file || !file.id) {
+      console.error("Invalid file object or missing 'id' property.");
+      return;
+    }
 
+    await deleteDoc(doc(db, "files", file.id.toString())).then((resp) => {
+      setShowToastMsg("File deleted successfully");
+    });
+  };
   return (
     <div
       className="bg-white mt-5 p-5
@@ -57,9 +72,9 @@ function FileList() {
           <h2></h2>
         </div>
       </div>
-      {FileList &&
-        FileList.map((item, index) => (
-          <div key={index}>
+      {fileList &&
+        fileList.map((item, index) => (
+          <div key={index} onClick={() => deleteFile(item)}>
             <FileItem file={item} key={index} />
           </div>
         ))}

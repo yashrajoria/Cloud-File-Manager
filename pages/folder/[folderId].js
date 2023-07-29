@@ -10,7 +10,7 @@ import { collection } from "firebase/firestore";
 import SearchBar from "@/components/SearchBar";
 import FolderList from "@/components/Folder/FolderList";
 import { ShowToastContext } from "@/Context/ShowToastContext";
-
+import FileList from "@/components/File/FileList";
 function FolderDetails() {
   const router = useRouter();
   const { name, id } = router.query;
@@ -19,6 +19,7 @@ function FolderDetails() {
     ParentFolderIdContext
   );
   const [folderList, setFolderList] = useState([]);
+  const [fileList, setFileList] = useState([]);
   const db = getFirestore(app);
 
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
@@ -26,6 +27,7 @@ function FolderDetails() {
     setParentFolderId(id);
     if (session) {
       getUserFolderList();
+      getUserFileList();
     }
   }, [id, session, showToastMsg]);
 
@@ -45,12 +47,27 @@ function FolderDetails() {
       setFolderList((folderList) => [...folderList, doc.data()]);
     });
   };
+  const getUserFileList = async () => {
+    setFileList([]); //assigning them empty so that values dont get appended wheneber the page is refreshed
+    const getQuery = query(
+      collection(db, "files"),
+      where("createdBy", "==", session.user.email),
+      where("parentFolderId", "==", id)
+    );
+    const querySnapshot = await getDocs(getQuery);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      // console.log(doc.id, " FileLisy=> ", doc.data());
+      setFileList((fileList) => [...fileList, doc.data()]);
+    });
+  };
   return (
     <div className="p-5">
       <SearchBar />
       <h2 className="text-[20px] font-bold mt-5">{name}</h2>
 
       <FolderList folderList={folderList} />
+      <FileList fileList={fileList} />
     </div>
   );
 }

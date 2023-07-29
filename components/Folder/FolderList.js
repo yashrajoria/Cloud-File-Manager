@@ -29,6 +29,7 @@ function FolderList({ folderList }) {
   //     Name: "Folder 6",
   //   },
   // ];
+  //!TODO: Implement delte folder funcitonality
   const [activeFolder, setActiveFolder] = useState();
   const router = useRouter();
   const onFolderClick = (index, item) => {
