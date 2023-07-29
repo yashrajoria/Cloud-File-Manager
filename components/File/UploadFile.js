@@ -14,54 +14,31 @@ function UploadFileModal({ closeModal }) {
   //!TODO:Change docId
   const docId = Date.now();
   const db = getFirestore(app);
+  //Firebase function for storage
   const storage = getStorage(app);
-
-  // const onFileUpload = async (file) => {
-  //   // if (file) {
-  //   //   if (file?.size > 1000000) {
-  //   //     setShowToastMsg("File is too large");
-  //   //     return;
-  //   //   }
-  //   // const fileRef = ref(storage, "file/" + file.name);
-
-  //   // uploadBytes(fileRef, file)
-  //   //   .then((snapshot) => {
-  //   //     console.log("Uploaded a blob or file!");
-  //   //   })
-  //   // .then((resp) => {
-  //   //   getDownloadURL(fileRef).then(async (downloadURL) => {
-  //   // console.log("File available at", downloadURL);
-  //   console.log(file);
-  //   await setDoc(doc(db, "files", docId.toString()), {
-  //     name: file.name,
-  //     type: file.name.split(".")[1],
-  //     size: file.size,
-  //     modifiedAt: file.lastModified,
-  //     createdBy: session.user.email,
-  //     parentFolderId: parentFolderId,
-  //     imageUrl: " downloadURL",
-  //     // id: docId,
-  //   });
-  //   // closeModal(true);
-  //   // setShowToastMsg("File Uploaded Successfully!");
-  //   // });
-  //   // });
-  //   // }
-  // };
-
   //!TODO:Add proper comments and explaination
   const onFileUpload = async (file) => {
-    console.log(file);
-    await setDoc(doc(db, "files", docId.toString()), {
-      name: file.name,
-      type: file.name.split(".")[1],
-      size: file.size,
-      modifiedAt: file.lastModified,
-      createdBy: session.user.email,
-      parentFolderId: parentFolderId,
-      imageUrl: "./folder.png",
-      // id: docId,
-    });
+    const fileRef = ref(storage, "file/" + file.name);
+    // 'file' comes from the Blob or File API
+    uploadBytes(fileRef, file)
+      .then((snapshot) => {
+        console.log("Uploaded a blob or file!");
+      })
+      .then((resp) => {
+        getDownloadURL(fileRef).then(async (downloadURL) => {
+          console.log("File Available at", downloadURL);
+          await setDoc(doc(db, "files", docId.toString()), {
+            name: file.name,
+            type: file.name.split(".")[1],
+            size: file.size,
+            modifiedAt: file.lastModified,
+            createdBy: session.user.email,
+            parentFolderId: parentFolderId,
+            imageUrl: downloadURL,
+            id: docId,
+          });
+        });
+      });
     closeModal(true);
     setShowToastMsg("File Uploaded Successfully");
   };
