@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import FolderItem from "./FolderItem";
+import { useRouter } from "next/router";
 function FolderList({ folderList }) {
   //dummy data
   // const folderList = [
@@ -28,7 +29,18 @@ function FolderList({ folderList }) {
   //     Name: "Folder 6",
   //   },
   // ];
-
+  const [activeFolder, setActiveFolder] = useState();
+  const router = useRouter();
+  const onFolderClick = (index, item) => {
+    setActiveFolder(index);
+    router.push({
+      pathname: "/folder/" + item.id,
+      query: {
+        name: item.name,
+        id: item.id,
+      },
+    });
+  };
   return (
     <div className="p-5 mt-5 bg-white rounded-lg ">
       <h2 className="text-17px  items-center text-black font-bold">
@@ -39,7 +51,13 @@ function FolderList({ folderList }) {
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-3 gap-4">
         {folderList.map((item, index) => (
-          <FolderItem key={index} folder={item} />
+          <div onClick={() => onFolderClick(index, item)}>
+            <FolderItem
+              key={index}
+              folder={item}
+              activeFolder={activeFolder == index}
+            />
+          </div>
         ))}
       </div>
     </div>
