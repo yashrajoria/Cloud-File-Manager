@@ -11,7 +11,7 @@ function UploadFileModal({ closeModal }) {
     ParentFolderIdContext
   );
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
-  //!TODO:Change docId
+  //!TODO:Change docId, change timestamp
   const docId = Date.now();
   const db = getFirestore(app);
   //Firebase function for storage
