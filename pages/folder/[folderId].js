@@ -29,6 +29,7 @@ function FolderDetails() {
     }
   }, [id, session, showToastMsg]);
 
+  //!TODO: Change name for the given below function to the appropriate one, also write explaination for contexts. Change the styling for the subfolder list
   const getUserFolderList = async () => {
     setFolderList([]); //assigning them empty so that values dont get appended wheneber the page is refreshed
     const getQuery = query(

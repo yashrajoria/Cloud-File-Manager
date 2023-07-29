@@ -2,6 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import menu from "../data/menu";
 import CreateFolder from "./Folder/CreateFolder";
+import UploadFile from "./File/UploadFile";
 function SidebarNav() {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -10,7 +11,10 @@ function SidebarNav() {
       <div className="flex justify-center">
         <Image alt="logo" src="/logo1.svg" width={120} height={90} />
       </div>
-      <button className="flex gap-2 items-center bg-blue-500 p-2 w-full justify-center text-white rounded-md px-3 hover:scale-105 transition-all mt-5 text-[13px]">
+      <button
+        onClick={() => window.upload_file.showModal()}
+        className="flex gap-2 items-center bg-blue-500 p-2 w-full justify-center text-white rounded-md px-3 hover:scale-105 transition-all mt-5 text-[13px]"
+      >
         Add New File
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -78,6 +82,10 @@ function SidebarNav() {
       </div>
       <dialog id="my_modal_3" className="modal">
         <CreateFolder />
+      </dialog>
+
+      <dialog id="upload_file" className="modal">
+        <UploadFile closeModal={() => window.upload_file.close()} />
       </dialog>
     </div>
   );
