@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { ParentFolderIdContext } from "@/Context/ParentFolderIdContext";
 import { ShowToastContext } from "@/Context/ShowToastContext";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import generateRandomId from "@/data/RandomIdGenerator";
+import { Current_Date, Current_Time } from "@/data/DateTimeGenerator";
 function UploadFileModal({ closeModal }) {
   const { data: session } = useSession();
   const { parentFolderId, setParentFolderId } = useContext(
@@ -12,7 +14,9 @@ function UploadFileModal({ closeModal }) {
   );
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
   //!TODO:Change docId, change timestamp
-  const docId = Date.now();
+  const docId = generateRandomId();
+  const timestamp = Current_Date + " " + Current_Time;
+
   const db = getFirestore(app);
   //Firebase function for storage
   const storage = getStorage(app);
@@ -36,6 +40,7 @@ function UploadFileModal({ closeModal }) {
             parentFolderId: parentFolderId,
             imageUrl: downloadURL,
             id: docId,
+            createdAt: timestamp,
           });
         });
       });

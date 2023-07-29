@@ -5,13 +5,18 @@ import { app } from "@/Config/FirebaseConfig";
 import { useSession } from "next-auth/react";
 import { ShowToastContext } from "@/Context/ShowToastContext";
 import { ParentFolderIdContext } from "@/Context/ParentFolderIdContext";
+import generateRandomId from "@/data/RandomIdGenerator";
+import { Current_Date, Current_Time } from "@/data/DateTimeGenerator";
+
 function CreateFolder() {
   const [folderName, setFolderName] = useState();
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
   const db = getFirestore(app);
   const { data: session } = useSession();
-  const docId = Date.now().toString();
-  const timestamp = Date.now().toString();
+  const docId = generateRandomId();
+
+  const timestamp = Current_Date + " " + Current_Time;
+
   const { parentFolderId, setParentFolderId } = useContext(
     ParentFolderIdContext
   );
@@ -23,6 +28,7 @@ function CreateFolder() {
       id: docId,
       createdBy: session.user.email,
       parentFolderId: parentFolderId,
+      createdAt: timestamp,
     });
     setShowToastMsg("Folder created successfully");
   };
