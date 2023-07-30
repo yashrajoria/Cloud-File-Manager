@@ -1,27 +1,31 @@
+// import moment from "moment";
 import { deleteDoc, doc, getFirestore } from "firebase/firestore";
 import moment from "moment/moment";
 import Image from "next/image";
 import React, { useContext, useState } from "react";
 import { app } from "../../Config/FirebaseConfig";
 import { ShowToastContext } from "@/Context/ShowToastContext";
-const db = getFirestore(app);
-// const image = "/" + file.type + ".png";
-// const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
-// const deleteFile = async (file) => {
-//   await deleteDoc(doc(db, "files", file.id.toString())).then((resp) => {
-//     setShowToastMsg("File Deleted!!!");
-//   });
-// };
+
 function FileItem({ file }) {
+  const db = getFirestore(app);
+  const image = "/" + file.type + ".png";
+  console.log(image);
+  const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
+  const deleteFile = async (file) => {
+    await deleteDoc(doc(db, "files", file.id.toString())).then((resp) => {
+      setShowToastMsg("File Deleted!!!");
+    });
+  };
+
   return (
     <div
       className="grid grid-cols-1
-  md:grid-cols-2 justify-between
-  cursor-pointer hover:bg-gray-100
-  p-3 rounded-md"
+    md:grid-cols-2 justify-between
+    cursor-pointer hover:bg-gray-100
+    p-3 rounded-md"
     >
       <div className="flex gap-2 items-center">
-        {/* <Image src={image} alt="file-icon" width={26} height={20} on /> */}
+        <Image src={image} alt="file-icon" width={26} height={20} on />
         <h2
           className="text-[15px] truncate"
           onClick={() => window.open(file.imageUrl)}
@@ -40,13 +44,13 @@ function FileItem({ file }) {
           {(file.size / 1024 ** 2).toFixed(2) + " MB"}
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            // onClick={() => deleteFile(file)}
+            onClick={() => deleteFile(file)}
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-5 h-5 float-right text-red-500
-         hover:scale-110 transition-all"
+           hover:scale-110 transition-all"
           >
             <path
               strokeLinecap="round"
