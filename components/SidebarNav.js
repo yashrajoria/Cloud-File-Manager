@@ -15,7 +15,7 @@ function SidebarNav() {
     session && (
       <div className="w-[200px] bg-white h-screen sticky top-0 z-10 shadow-blue-200 shadow-md p-5 ">
         <div className="flex justify-center">
-          <Image alt="logo" src="/logo1.svg" width={120} height={90} />
+          <Image alt="logo" src="/R.jpeg" width={120} height={90} />
         </div>
         <button
           onClick={() => window.upload_file.showModal()}
