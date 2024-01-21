@@ -5,41 +5,10 @@ import { app } from "@/Config/FirebaseConfig";
 import { ShowToastContext } from "@/Context/ShowToastContext";
 
 function FileList({ fileList }) {
-  //dummy data
-  // const fileList = [
-  //   {
-  //     id: 1,
-  //     name: "UX Principal.docx",
-  //     type: "doc",
-  //     size: "6272 kB",
-  //     modifiedAt: "Nov 23,2020",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Data Structure.pdf",
-  //     type: "pdf",
-  //     size: "672 kB",
-  //     modifiedAt: "Nov 23,2022",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "smaple Image.png",
-  //     type: "image",
-  //     size: "400 kB",
-  //     modifiedAt: "Nov 23,2023",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "React Principal.docx",
-  //     type: "doc",
-  //     size: "6272 kB",
-  //     modifiedAt: "Nov 23,2020",
-  //   },
-  // ];
   const db = getFirestore(app);
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
   const deleteFile = async (file) => {
-    console.log(file);
+    // console.log(file);
     if (!file || !file.id) {
       console.error("Invalid file object or missing 'id' property.");
       return;

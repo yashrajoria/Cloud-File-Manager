@@ -1,31 +1,48 @@
-import { app } from "@/Config/FirebaseConfig";
-import { getDocs, getFirestore } from "firebase/firestore";
-import { useSession } from "next-auth/react";
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { query, collection, querySnapshot, where } from "firebase/firestore";
+import { app } from "../../Config/FirebaseConfig";
+import { useSession } from "next-auth/react";
+import StorageSize from "../../Services/StorageSize";
+
 function StorageInfo() {
   const { data: session } = useSession();
   const db = getFirestore(app);
-
   const [totalSizeUsed, setTotalSizeUsed] = useState(0);
+  const [imageSize, setImageSize] = useState(0);
+
+  const [fileList, setFileList] = useState([]);
+
   let totalSize = 0;
   useEffect(() => {
     if (session) {
       totalSize = 0;
       getAllFiles();
     }
-  });
+  }, [session]);
+
+  useEffect(() => {
+    setImageSize(StorageSize.getStorageByType(fileList, ["pdf", "jpg", "png"]));
+  }, [fileList]);
   const getAllFiles = async () => {
-    const getFiles = query(
+    const q = query(
       collection(db, "files"),
       where("createdBy", "==", session.user.email)
     );
-    const querySnapshot = await getDocs(getFiles);
+    const querySnapshot = await getDocs(q);
+    setFileList([]);
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, doc.data()["size"]);
       totalSize = totalSize + doc.data()["size"];
+      // console.log("Filesize", doc.data());
+      setFileList((fileList) => [...fileList, doc.data()]);
+      // console.log(totalSize);
     });
-    console.log((totalSize / 1024 ** 2).toFixed(2) + " MB");
+
     setTotalSizeUsed((totalSize / 1024 ** 2).toFixed(2) + " MB");
   };
 
@@ -33,12 +50,12 @@ function StorageInfo() {
     <div className="mt-7">
       <h2
         className="text-[22px] 
-           font-bold"
+       font-bold"
       >
         {totalSizeUsed}{" "}
         <span
           className="text-[14px]
-            font-medium"
+        font-medium"
         >
           used of{" "}
         </span>{" "}
@@ -46,7 +63,7 @@ function StorageInfo() {
       </h2>
       <div
         className="w-full
-            bg-gray-200  h-2.5 flex"
+        bg-gray-200  h-2.5 flex"
       >
         <div className="bg-blue-600 h-2.5 w-[25%]"></div>
         <div className="bg-green-600 h-2.5 w-[35%]"></div>

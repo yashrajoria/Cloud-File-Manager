@@ -39,11 +39,11 @@ function FolderDetails() {
       where("createdBy", "==", session.user.email),
       where("parentFolderId", "==", id)
     );
-    console.log("inner folder success");
+    // console.log("inner folder success");
     const querySnapshot = await getDocs(getQuery);
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
+      // console.log(doc.id, " => ", doc.data());
       setFolderList((folderList) => [...folderList, doc.data()]);
     });
   };

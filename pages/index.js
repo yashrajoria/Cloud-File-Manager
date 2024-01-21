@@ -30,7 +30,7 @@ export default function Home() {
     } else {
       getUserFolderList();
       getUserFileList();
-      console.log("Session", session.user);
+      // console.log("Session", session.user);
     }
     setParentFolderId(0);
   }, [session, showToastMsg]);
