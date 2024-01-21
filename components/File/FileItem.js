@@ -9,7 +9,6 @@ import { ShowToastContext } from "@/Context/ShowToastContext";
 function FileItem({ file }) {
   const db = getFirestore(app);
   const image = "/" + file.type + ".png";
-  console.log(image);
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
   const deleteFile = async (file) => {
     await deleteDoc(doc(db, "files", file.id.toString())).then((resp) => {
@@ -25,7 +24,7 @@ function FileItem({ file }) {
     p-3 rounded-md"
     >
       <div className="flex gap-2 items-center">
-        <Image src={image} alt="file-icon" width={26} height={20} on />
+        <Image src={image} alt="file-icon" width={26} height={20} />
         <h2
           className="text-[15px] truncate"
           onClick={() => window.open(file.imageUrl)}

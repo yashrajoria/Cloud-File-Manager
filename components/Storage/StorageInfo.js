@@ -17,6 +17,7 @@ function StorageInfo() {
   const [imageSize, setImageSize] = useState(0);
 
   const [fileList, setFileList] = useState([]);
+
   let totalSize = 0;
   useEffect(() => {
     if (session) {
@@ -26,7 +27,7 @@ function StorageInfo() {
   }, [session]);
 
   useEffect(() => {
-    setImageSize(StorageSize.getStorageByType(fileList, ["png", "jpg", "pdf"]));
+    setImageSize(StorageSize.getStorageByType(fileList, ["pdf", "jpg", "png"]));
   }, [fileList]);
   const getAllFiles = async () => {
     const q = query(
@@ -37,7 +38,9 @@ function StorageInfo() {
     setFileList([]);
     querySnapshot.forEach((doc) => {
       totalSize = totalSize + doc.data()["size"];
+      // console.log("Filesize", doc.data());
       setFileList((fileList) => [...fileList, doc.data()]);
+      // console.log(totalSize);
     });
 
     setTotalSizeUsed((totalSize / 1024 ** 2).toFixed(2) + " MB");

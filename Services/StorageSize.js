@@ -11,9 +11,9 @@ const getStorageByType = (data, types) => {
   });
 
   Object.keys(totalSizesByType).forEach((type) => {
-    console.log(
-      `${type}: ${(totalSizesByType[type] / 1024 ** 2).toFixed(2)} MB`
-    );
+    // console.log(
+    `${type}: ${(totalSizesByType[type] / 1024 ** 2).toFixed(2)} MB`;
+    // );
   });
 
   return totalSizesByType;

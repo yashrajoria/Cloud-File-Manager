@@ -8,7 +8,7 @@ function FileList({ fileList }) {
   const db = getFirestore(app);
   const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
   const deleteFile = async (file) => {
-    console.log(file);
+    // console.log(file);
     if (!file || !file.id) {
       console.error("Invalid file object or missing 'id' property.");
       return;

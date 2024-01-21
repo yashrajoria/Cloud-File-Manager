@@ -2,33 +2,6 @@ import React, { useState } from "react";
 import FolderItem from "./FolderItem";
 import { useRouter } from "next/router";
 function FolderList({ folderList }) {
-  //dummy data
-  // const folderList = [
-  //   {
-  //     id: 1,
-  //     Name: "Folder 1",
-  //   },
-  //   {
-  //     id: 2,
-  //     Name: "Folder 2",
-  //   },
-  //   {
-  //     id: 3,
-  //     Name: "Folder 3",
-  //   },
-  //   {
-  //     id: 4,
-  //     Name: "Folder 4",
-  //   },
-  //   {
-  //     id: 5,
-  //     Name: "Folder 5",
-  //   },
-  //   {
-  //     id: 6,
-  //     Name: "Folder 6",
-  //   },
-  // ];
   //!TODO: Implement delte folder funcitonality
   const [activeFolder, setActiveFolder] = useState();
   const router = useRouter();
@@ -52,12 +25,11 @@ function FolderList({ folderList }) {
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-3 gap-4">
         {folderList.map((item, index) => (
-          <div onClick={() => onFolderClick(index, item)}>
-            <FolderItem
-              key={index}
-              folder={item}
-              activeFolder={activeFolder == index}
-            />
+          <div
+            key={`folder-${index}`}
+            onClick={() => onFolderClick(index, item)}
+          >
+            <FolderItem folder={item} activeFolder={activeFolder === index} />
           </div>
         ))}
       </div>
